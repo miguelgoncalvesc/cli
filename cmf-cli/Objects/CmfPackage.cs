@@ -532,6 +532,7 @@ namespace Cmf.Common.Cli.Objects
 
             string fileContent = file.ReadToString();
             CmfPackage cmfPackage = JsonConvert.DeserializeObject<CmfPackage>(fileContent);
+
             cmfPackage.IsToSetDefaultValues = setDefaultValues;
             cmfPackage.FileInfo = file;
             cmfPackage.Location = PackageLocation.Local;

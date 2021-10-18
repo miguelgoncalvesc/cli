@@ -36,9 +36,15 @@ namespace Cmf.Common.Cli.Objects
         /// <value>
         ///   <c>true</c> if mandatory; otherwise, <c>false</c>.
         /// </value>
-        [JsonProperty(Order = 2)]
         [JsonIgnore]
+        [JsonProperty(Order = 2)]
         public bool Mandatory { get; set; }
+
+        [JsonProperty(nameof(Mandatory))]
+        private bool MandatorySetter
+        {
+            set => Mandatory = value;
+        }
 
         /// <summary>
         /// The CmfPackage that satisfies this dependency

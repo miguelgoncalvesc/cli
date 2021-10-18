@@ -167,14 +167,7 @@ namespace Cmf.Common.Cli.Commands
 
                         if (!dependencyFound)
                         {
-                            if (dependency.Mandatory)
-                            {
-                                throw new CliException(string.Format(CliMessages.MissingMandatoryDependency, dependency));
-                            }
-                            else
-                            {
-                                Log.Warning(string.Format(CliMessages.MissingMandatoryDependency, dependency));
-                            }
+                            Log.Warning(string.Format(CliMessages.MissingMandatoryDependency, dependency.Id, dependency.Version));
                         }
                     }
                 }
