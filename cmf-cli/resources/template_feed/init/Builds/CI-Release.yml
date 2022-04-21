@@ -269,10 +269,8 @@ stages:
                 $ServerAddress = $EnvConfigJson.'Product.ApplicationServer.Address'
                 Write-Output "##vso[task.setvariable variable=$("ServerAddress")]$ServerAddress"
 
-                $CmfPackageJsonFile = Get-Item "./Configurations/cmfpackage.json"
-                $CmfPackageJson = Get-Content -Raw -Path $CmfPackageJsonFile | ConvertFrom-Json
-                $PackageId = $CmfPackageJson.'packageId'
-                $PackageVersion = $CmfPackageJson.'version'
+                $PackageId = "${{ variables.RootPackageIdToInstall }}"
+                $PackageVersion = (Get-Item "${{ variables.CandidatePackages }}/Package/$PackageId*").BaseName -replace "$PackageId."
                 $PackageToInstall = "$PackageId@$PackageVersion"
                 Write-Output "##vso[task.setvariable variable=$("PackageToInstall")]$PackageToInstall"
 
@@ -474,13 +472,9 @@ stages:
             inputs:
               targetType: inline
               script: |
-                $CmfPackageJsonFile = Get-Item "./Configurations/cmfpackage.json"
-                $CmfPackageJson = Get-Content -Raw -Path $CmfPackageJsonFile | ConvertFrom-Json
-                $PackVersion = $CmfPackageJson.'version'
-                $PackageId = $CmfPackageJson.'packageId'
-                Write-Host "PackVersion = $PackVersion"
-                Write-Host "PackageId = $PackageId"
-                echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackVersion"
+                $PackageId = "${{ variables.RootPackageIdToInstall }}"
+                $PackageVersion = (Get-Item "${{ variables.CandidatePackages }}/Package/$PackageId*").BaseName -replace "$PackageId."
+                echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackageVersion"
                 echo "##vso[task.setvariable variable=PackageId;isOutput=true]$PackageId"
             name: GetPackageVersion
 
@@ -576,7 +570,7 @@ stages:
           inputs:
             targetType: inline
             script: |
-                $masterDataFiles = "${{ variables.CandidatePackages }}/Tests/*MasterData*.zip"
+                $masterDataFiles = "${{ variables.CandidatePackages }}/Tests/${{ variables.TestMasterDataFilter }}.zip"
                 Write-Host "##vso[task.setVariable variable=ArtifactExists;]false"
 
                 if (Get-ChildItem -Path $masterDataFiles)
@@ -645,7 +639,7 @@ stages:
                         Copy-Item -Path $iso -Destination $destIso -Force -Verbose
                     }
 
-                    $masterDataFiles = "${{ variables.CandidatePackages }}/Tests/*MasterData*.zip"
+                    $masterDataFiles = "${{ variables.CandidatePackages }}/Tests/${{ variables.TestMasterDataFilter }}.zip"
 
                     Get-ChildItem $masterDataFiles | foreach {
                         $PackageId = [regex]::split($_.BaseName, ".[0-9]+.[0-9]+.[0-9]+")[0];
@@ -920,13 +914,9 @@ stages:
                   inputs:
                     targetType: inline
                     script: |
-                      $CmfPackageJsonFile = Get-Item "./Configurations/cmfpackage.json"
-                      $CmfPackageJson = Get-Content -Raw -Path $CmfPackageJsonFile | ConvertFrom-Json
-                      $PackVersion = $CmfPackageJson.'version'
-                      $PackageId = $CmfPackageJson.'packageId'
-                      Write-Host "PackVersion = $PackVersion"
-                      Write-Host "PackageId = $PackageId"
-                      echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackVersion"
+                      $PackageId = "${{ variables.RootPackageIdToInstall }}"
+                      $PackageVersion = (Get-Item "${{ variables.CandidatePackages }}/Package/$PackageId*").BaseName -replace "$PackageId."
+                      echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackageVersion"
                       echo "##vso[task.setvariable variable=PackageId;isOutput=true]$PackageId"
                   name: GetPackageVersion
 
@@ -1037,13 +1027,9 @@ stages:
             inputs:
               targetType: inline
               script: |
-                $CmfPackageJsonFile = Get-Item "./Configurations/cmfpackage.json"
-                $CmfPackageJson = Get-Content -Raw -Path $CmfPackageJsonFile | ConvertFrom-Json
-                $PackVersion = $CmfPackageJson.'version'
-                $PackageId = $CmfPackageJson.'packageId'
-                Write-Host "PackVersion = $PackVersion"
-                Write-Host "PackageId = $PackageId"
-                echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackVersion"
+                $PackageId = "${{ variables.RootPackageIdToInstall }}"
+                $PackageVersion = (Get-Item "${{ variables.CandidatePackages }}/Package/$PackageId*").BaseName -replace "$PackageId."
+                echo "##vso[task.setvariable variable=PackageVersion;isOutput=true]$PackageVersion"
                 echo "##vso[task.setvariable variable=PackageId;isOutput=true]$PackageId"
             name: GetPackageVersion
 
